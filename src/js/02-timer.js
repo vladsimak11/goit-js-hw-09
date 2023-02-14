@@ -38,6 +38,7 @@ function convertMs(ms) {
 }
 
 let selectedTime = null;
+let intervalId = null;
 
 const options = {
   enableTime: true,
@@ -48,6 +49,9 @@ const options = {
     if(selectedDates[0] < options.defaultDate) {
       Notiflix.Notify.failure('Please choose a date in the future');
       start.disabled = true;
+      const time = convertMs(0);
+      addTimeToPage(time);
+      clearInterval(intervalId);
     } else {
       Notiflix.Notify.success('Thank you, you have selected a date in the future');
       start.disabled = false;
@@ -62,7 +66,7 @@ flatpickr('#datetime-picker', options);
 start.addEventListener('click', startTimer);
 
 function startTimer() {
-  setInterval(() => {
+  intervalId = setInterval(() => {
     const deltaTime = selectedTime - Date.now();
     const time = convertMs(deltaTime);
     addTimeToPage(time);
